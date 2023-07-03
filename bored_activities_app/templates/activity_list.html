@@ -1,0 +1,11 @@
+<h2>Activity List</h2>
+
+{% if activities %}
+    <ul>
+        {% for activity in activities %}
+            <li>{{ activity.activity }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No activities found.</p>
+{% endif %}
