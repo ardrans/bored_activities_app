@@ -1,11 +1,31 @@
-<h2>Activity List</h2>
+<<h2>Activity List</h2>
 
-{% if activities %}
+{% if page_obj %}
     <ul>
-        {% for activity in activities %}
-            <li>{{ activity.activity }}</li>
+        {% for activity in page_obj %}
+            <li>{{ activity.activity }} <form method="POST" action="{% url 'edit_activity' activity_id=activity.id  %}">
+            {% csrf_token %}
+            <button type="submit">Edit</button>
+            </form><form method="POST" action="{% url 'delete_activity' activity_id=activity.id  %}">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+            </form></li></li>
+
         {% endfor %}
     </ul>
+
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
 {% else %}
     <p>No activities found.</p>
 {% endif %}
+
+ <li><form method="POST" action="{% url 'fetch_activities' %}">
+     {% csrf_token %}
+     <button type="submit">Add Activity</button>
+ </form></li>

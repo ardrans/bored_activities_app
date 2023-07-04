@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Activity</title>
+</head>
+<body>
+    <h1>Add Activity</h1>
+    <form action="{% url 'fetch_activities' %}" method="POST">
+        {% csrf_token %}
+        <label for="activity_type">Activity Type:</label>
+        <select name="activity_type" id="activity_type">
+            {% for type in types %}
+    <option value="{{ type.type_id }}">{{ type.name }}</option>
+  {% endfor %}
+</select>
+        <br><br>
+        <input type="submit" value="Fetch Activity">
+    </form>
+</body>
+</html>

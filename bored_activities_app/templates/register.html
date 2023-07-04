@@ -1,0 +1,14 @@
+<h2>Register</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+<label for="activity-type">Type:</label>
+<select name="activity_type" id="activity-type">
+  {% for type in types %}
+    <option value="{{ type.type_id }}">{{ type.name }}</option>
+  {% endfor %}
+</select>
+
+
+  <button type="submit">Register</button>
+</form>
