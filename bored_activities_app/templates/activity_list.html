@@ -1,31 +1,68 @@
-<<h2>Activity List</h2>
+{% load static %}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+<h2>Activity List</h2>
 
 {% if page_obj %}
-    <ul>
-        {% for activity in page_obj %}
-            <li>{{ activity.activity }} <form method="POST" action="{% url 'edit_activity' activity_id=activity.id  %}">
-            {% csrf_token %}
-            <button type="submit">Edit</button>
-            </form><form method="POST" action="{% url 'delete_activity' activity_id=activity.id  %}">
-            {% csrf_token %}
-            <button type="submit">Delete</button>
-            </form></li></li>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Activity</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activity in page_obj %}
+                <tr>
+                    <td>
+                        {% if not activity.edit_mode %}
+                            {{ activity.activity }}
+                        {% else %}
+                            <form method="POST" action="{% url 'update_activity' activity_id=activity.id %}">
+                                {% csrf_token %}
+                                <input type="text" name="activity" value="{{ activity.activity }}" required>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if not activity.edit_mode %}
+                                <form method="POST" action="{% url 'edit_activity' activity_id=activity.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">Edit</button>
+                                </form>
+                            {% else %}
+                            <form method="POST" action="{% url 'update_activity' activity_id=activity.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">Save</button>
+                            {% endif %}
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" action="{% url 'delete_activity' activity_id=activity.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-        {% endfor %}
-    </ul>
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
 
-    {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+    {% else %}
+        <p>No activities found.</p>
     {% endif %}
 
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Next</a>
-    {% endif %}
-{% else %}
-    <p>No activities found.</p>
-{% endif %}
+    <form method="GET" action="{% url 'insert_activity' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Add Activity</button>
+    </form>
 
- <li><form method="POST" action="{% url 'fetch_activities' %}">
-     {% csrf_token %}
-     <button type="submit">Add Activity</button>
- </form></li>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>

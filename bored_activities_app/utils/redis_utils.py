@@ -1,17 +1,22 @@
 import redis
-from .utils import *
-
 
 redis_host = "localhost"
 redis_port = 6379
 redis_password = ""
 
+class RedisUtil:
 
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+    def __init__(self):
+        self.client = redis.StrictRedis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True)
 
+    def set_value(self,key,value):
+        self.client.set(key, value,keepttl=3600)
+        return True
 
-def key():
-    secret_key = redis.StrictRedis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True)
-    key = random_string_generator(32)
-    secret_key.set("redis_key:key", key)
-    redis_key = secret_key.get("redis_key:key")
-    return redis_key
+    def get(self,key):
+        return self.client.get(key)

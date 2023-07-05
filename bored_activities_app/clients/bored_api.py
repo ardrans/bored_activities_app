@@ -13,13 +13,20 @@ class BoardedApi:
 
     @staticmethod
     def get_activities(activity_type:str,limit:int = 10)->list:
-        activities =  []
-        for i in range(0,limit):
-            activities.append(BoardedApi.get_random_activity(activity_type))
+        activities = []
+        unique_keys = []
+        while len(unique_keys) < 10:
+            activity = BoardedApi.get_random_activity(activity_type)
+            if activity['key'] in unique_keys:
+                continue
+            unique_keys.append(activity['key'])
+            activities.append(activity)
         return activities
+
 
 if __name__ == '__main__':
     activities_ = BoardedApi.get_activities('education')
+    print(activities_)
 
 
 
